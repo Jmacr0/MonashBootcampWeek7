@@ -33,13 +33,24 @@ async function generateProfile() {
         let promptedAnswers = await promptQuestions();
         let { username, favouriteColour } = promptedAnswers;
         let githubUser = await axios.get(`https://api.github.com/users/${username}`);
-        let { data: { login, avatar_url, location, html_url, blog, bio, public_repos, followers, following } } = githubUser;
+        let {
+            data: {
+                login,
+                avatar_url,
+                location, html_url,
+                blog,
+                bio,
+                public_repos,
+                followers,
+                following
+            }
+        } = githubUser;
 
-        let { data } = await axios.get(`https://api.github.com/users/${login}/starred`);
-        let numOfStars = data.length;
-        // let googleMaps = await axios.get(`https://geocoder.api.here.com/6.2/geocode.json?housenumber=425&street=randolph&city=chicago&country=usa&gen=9&app_id=devportal-demo-20180625&app_code=9v2BkviRwi9Ot26kp2IysQc`)
-        let template = await readFileAsync('index.base.html', 'utf-8');
-        let updateTemplate = template.replace(/username:ph/g, login)
+        const { data } = await axios.get(`https://api.github.com/users/${login}/starred`);
+        const numOfStars = data.length;
+        // const googleMaps = await axios.get(`https://geocoder.api.here.com/6.2/geocode.json?housenumber=425&street=randolph&city=chicago&country=usa&gen=9&app_id=devportal-demo-20180625&app_code=9v2BkviRwi9Ot26kp2IysQc`)
+        const template = await readFileAsync('index.base.html', 'utf-8');
+        const updateTemplate = template.replace(/username:ph/g, login)
             // .replace("googlemaps:image", `http://maps.googleapis.com/maps/api/staticmap?center=${location}&zoom=13&size=600×300&key=AIzaSyAR5vseePdn17I0I7V45wNKAKogdEU6xNc`)
             .replace("[user:locationlink]", `https://www.google.com/maps/search/?api=1&query=${location}`)
             .replace(/favourite-colour/g, favouriteColour)
